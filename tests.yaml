@@ -1,0 +1,370 @@
+test
+Constructor:
+  - name: constructor_valid
+    input: 
+      email: "user@gmail.com"
+      startingBalance: 100
+    expect: Account object with email "user@gmail.com" and balance 100
+
+  - name: "constructor_zero_starting_balance"
+    input:
+      email: "user@gmail.com"
+      startingBalance: 0
+    expect: Account object with email "user@gmail.com" and balance 0
+
+  - name: "constructor_null_email"
+    input:
+      email: "null"
+      startingBalance: 100
+    expect: throw IllegalArgumentException
+
+  - name: "constructor_invalid_email"
+    input:
+      email: "usergmail.com"
+      startingBalance: 100
+    expect: throw IllegalArgumentException
+
+  - name: "constructor_invalid_starting_balance_negative"
+    input:
+      email: "user@gmail.com"
+      startingBalance: -50
+    expect: throw IllegalArgumentException
+  
+  - name: "constructor_invalid_starting_balance_decimal"
+    input:
+      email: "user@gmail.com"
+      startingBalance: 50.9999
+    expect: throw IllegalArgumentException
+
+
+getBalance:
+  - name: getBalance_valid
+    input:
+      balance: 100
+    expect: 100
+  
+  - name: getBalance_zero
+    input:
+      balance: 0
+    expect: 0
+  
+  - name: getBalance_large
+    input:
+      balance: 1000000
+    expect: 1000000
+  
+  - name: getBalance_decimal
+    input:
+      balance: 99.99
+    expect: 99.99
+
+
+getEmail:
+  - name: getEmail_valid
+    input:
+      email: "user@gmail.com"
+    expect: "user@gmail.com"
+
+  - name: getEmail_valid2
+    input:
+      email: "test@yahoo.com"
+    expect: "test@yahoo.com"
+
+  - name: getEmail_valid3
+    input:
+      email: "123@ithaca.edu"
+    expect: "123@ithaca.edu"
+
+
+
+
+withdraw:
+  - name: withdraw_valid_amount
+    input:
+      balance: 100
+      amount: 50
+    expect: 50
+
+    - name: withdraw_exact_balance
+    input:
+      balance: 100
+      amount: 100
+    expect: 0
+
+    - name: withdraw_decimal_amount
+    input:
+      balance: 100
+      amount: 25.75
+    expect: 74.25
+
+    - name: withdraw_3_decimal_places
+    input:
+      balance: 100
+      amount: 25.755
+    expect: throw IllegalArgumentException
+  
+  - name: withdraw_insufficient_funds
+    input:
+      balance: 100
+      amount: 150
+    expect: throw InsufficientFundsException
+  
+  - name: withdraw_zero_amount
+    input:
+      balance: 100
+      amount: 0
+    expect: throw IllegalArgumentException
+
+  - name: withdraw_negative_amount
+    input:
+      balance: 100
+      amount: -20
+    expect: throw IllegalArgumentException
+  
+  - name: withdraw_from_zero_balance
+    input:
+      balance: 0
+      amount: 50
+    expect: throw InsufficientFundsException
+
+  - name: withdraw_large_amount
+    input:
+      balance: 10000009
+      amount: 1000000
+    expect: 9000009
+
+  - name: withdraw_decimal_amount_large_balance
+    input:
+      balance: 1000000
+      amount: 999999.99
+    expect: 0.01
+
+
+deposit:
+  - name: deposit_valid_amount
+    input:
+      balance: 100
+      amount: 50
+    expect: 150
+  
+  - name: deposit_zero_amount
+    input:
+      balance: 100
+      amount: 0
+    expect: IllegalArgumentException
+
+  -name: deposit_to_zero_balance
+    input:
+      balance: 0
+      amount: 50
+    expect: 50
+  
+  - name: deposit_large_amount
+    input:
+      balance: 1000000
+      amount: 10
+    expect: 1000010
+
+  - name: deposit_negative_amount
+    input:
+      balance: 100
+      amount: -20
+    expect: IllegalArgumentException
+
+  - name: deposit_decimal_amount
+    input:
+      balance: 100
+      amount: 25.75
+    expect: 125.75
+
+  -name: deposit_3_decimal_places
+    input:
+      balance: 100
+      amount: 25.755
+    expect: throw IllegalArgumentException
+  
+  
+transfer:
+  - name: transfer_valid
+    input:
+      fromBalance: 100
+      toBalance: 50
+      amount: 25
+    expect:
+      fromBalance: 75
+      toBalance: 75
+
+  - name: transfer_insufficient_funds
+    input:
+      fromBalance: 100
+      toBalance: 50
+      amount: 150
+    expect: throw InsufficientFundsException 
+
+  - name: transfer_zero_amount
+    input:
+      fromBalance: 100
+      toBalance: 50
+      amount: 0
+    expect: throw IllegalArgumentException
+    
+  - name: transfer_negative_amount
+    input:
+      fromBalance: 100
+      toBalance: 50
+      amount: -20
+    expect: throw IllegalArgumentException
+
+  - name: transfer_to_zero_balance
+    input:
+      fromBalance: 100
+      toBalance: 0
+      amount: 50
+    expect:
+      fromBalance: 50
+      toBalance: 50
+    
+  - name: transfer_large_amount
+    input:
+      fromBalance: 1000000
+      toBalance: 50
+      amount: 250000
+    expect:
+      fromBalance: 750000
+      toBalance: 250050
+    
+  - name: transfer_decimal_amount
+    input:
+      fromBalance: 100
+      toBalance: 50
+      amount: 25.75
+    expect:
+      fromBalance: 74.25
+      toBalance: 75.75
+  
+  - name: transfer_3_decimal_places
+    input:
+      fromBalance: 100
+      toBalance: 50
+      amount: 25.755
+    expect: throw IllegalArgumentException
+
+  - name: transfer_insufficient_funds_from_zero_balance
+    input:
+      fromBalance: 0
+      toBalance: 50
+      amount: 5
+    expect: throw InsufficientFundsException
+
+  - name: transfer_when_account_has_exact_balance
+    input:
+      fromBalance: 100
+      toBalance: 5
+      amount: 100
+    expect:
+      fromBalance: 0
+      toBalance: 105
+
+
+isEmailValid:
+  - name: isEmailValid_valid
+    input:
+      email: "user@gmail.com"
+    expect: true
+
+  - name: isEmailValid_null_email
+    input:
+      email: null
+    expect: false
+
+  - name: isEmailValid_no_username
+    input:
+      email: "@gmail.com"
+    expect: false
+
+  - name: isEmailValid_local_part_with_special_chars
+    input:
+      email: "-user@gmail.com"
+    expect: true
+
+  - name: isEmailValid_no_at_symbol
+    input:
+      email: "usergmail.com"
+    expect: false
+
+  - name: isEmailValid_multiple_at_symbols
+    input:
+      email: "user@@gmail.com"
+    expect: false
+
+  - name: isEmailValid_no_domain
+    input:
+      email: "user@"
+    expect: false
+    
+  - name: isEmailValid_domain_starts_with_invalid_char
+    input:
+      email: "user@-gmail.com"
+    expect: false
+
+  - name: isEmailValid_no_second_level_domain
+    input:
+      email: "user@.com"
+    expect: false
+  
+  - name: isEmailValid_no_top_level_domain
+    input:
+      email: "user@gmail." 
+    expect: false
+  
+  - name: isEmailValid_missing_dot_in_domain
+    input:
+      email: "user@gmailcom"
+    expect: false
+  
+
+isAmountValid:
+  - name: isAmountValid_valid
+    input:
+      amount: 100
+    expect: true
+
+  - name: isAmountValid_zero
+    input:
+      amount: 0
+    expect: true
+
+  - name: isAmountValid_negative
+    input:
+      amount: -50
+    expect: false
+
+  - name: isAmountValid_decimal
+    input:
+      amount: 99.99
+    expect: true
+
+  - name: isAmountValid_more_than_2_decimal_places
+    input:
+      amount: 25.755
+    expect: false
+
+  - name: isAmountValid_non_numeric
+    input:
+      amount: "abc"
+    expect: false
+
+  - name: isAmountValid_null
+    input:
+      amount: null
+    expect: false
+
+  - name: isAmountValid_large_amount
+    input:
+      amount: 1000000
+    expect: true
+  
+  - name: isAmountValid_negative_decimal
+    input:
+      amount: -25.75
+    expect: false
